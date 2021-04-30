@@ -33,8 +33,17 @@ namespace JBSerializer
                 if (element.ValueKind == JsonValueKind.Null) return null;
                 if (element.ValueKind == JsonValueKind.Array)
                 {
-                    // Implement Array Converting
-                    throw new NotImplementedException();
+                    // ToDo: JsonSerializerの都合で1次元配列までだが，2次元配列以降に拡張した際にここも対応
+                    var genericType = type.GetGenericArguments()[0];
+                    var e = element.EnumerateArray();
+                    var array = Array.CreateInstance(genericType, element.GetArrayLength());
+                    var index = 0;
+                    var converter = provider.GetConverter(genericType) ?? throw new SerializationException("コンバータを取得出来ませんでした");
+                    while (e.MoveNext())
+                    {
+                        array.SetValue(converter.ConvertBack(e.Current, provider), index++);
+                    }
+                    return array;
                 }
                 switch (type)
                 {
