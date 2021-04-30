@@ -24,7 +24,7 @@ namespace JBSerializer
         /// <summary>
         /// フィールドを取得する
         /// </summary>
-        public Dictionary<string, object> Fields { get; set; }
+        public Dictionary<string, (string typeName, object value)> Fields { get; set; }
         /// <summary>
         /// <see cref="SerializeEntry"/>の新しいインスタンスを生成する
         /// </summary>
@@ -39,7 +39,7 @@ namespace JBSerializer
             if (type == null) throw new ArgumentNullException(nameof(type), "引数がnullです");
             TypeName = type.FullName;
             IsNull = false;
-            Fields = new Dictionary<string, object>();
+            Fields = new();
         }
     }
 }

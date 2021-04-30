@@ -39,11 +39,11 @@ namespace JBSerializer
             }
 
             // フィールドの復元
-            foreach (var (fieldName, value) in entry.Fields)
+            foreach (var (fieldName, (typeName, value)) in entry.Fields)
             {
                 var fieldInfo = ReflectionHelper.GetInstanceField(type, fieldName);
                 if (fieldInfo == null) throw new SerializationException("フィールドの復元に失敗しました");
-                var setValue = provider.GetConverter(fieldInfo.FieldType).ConvertBack(value, provider);
+                var setValue = provider.GetConverter(Type.GetType(typeName)).ConvertBack(value, provider);
                 fieldInfo.SetValue(result, setValue);
             }
 
@@ -86,7 +86,7 @@ namespace JBSerializer
             for (int i = 0; i < fields.Length; i++)
             {
                 var savedValue = provider.GetConverter(fields[i].FieldType).Convert(fields[i].GetValue(value), provider);
-                result.Fields.Add(fields[i].Name, savedValue);
+                result.Fields.Add(fields[i].Name, (fields[i].FieldType.FullName, savedValue));
             }
 
             // OnSerialized実装メソッドを実行

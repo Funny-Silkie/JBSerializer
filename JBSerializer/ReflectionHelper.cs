@@ -58,6 +58,11 @@ namespace JBSerializer
             if (type == null) throw new ArgumentNullException(nameof(type), "引数がnullです");
             return type.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, null);
         }
+        public static ConstructorInfo GetConstructor(Type type, params Type[] paramTypes)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type), "引数がnullです");
+            return type.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, paramTypes, null);
+        }
         public static bool IsInherited<TParent>(Type type) where TParent : class
         {
             if (type == null) throw new ArgumentNullException(nameof(type), "引数がnullです");
