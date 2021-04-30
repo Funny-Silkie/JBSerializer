@@ -48,17 +48,17 @@ namespace Test
             Assert.AreEqual(value, ds);
         }
         [Test]
+        public void SerializeTestJagArray()
+        {
+            var value = new int[][] { new[] { 1, 2 }, new[] { 3, 4 } };
+            var ds = Serialize(value, "2array");
+            Assert.AreEqual(value, ds);
+        }
+        [Test]
         public void SerializeTestList()
         {
             var value = new List<char>() { 'a', 'b', 'c' };
             var ds = Serialize(value, "list");
-            Assert.AreEqual(value, ds);
-        }
-        [Test]
-        public void SerializeTest2Array()
-        {
-            var value = new int[][] { new[] { 1, 2 }, new[] { 3, 4 } };
-            var ds = Serialize(value, "2array");
             Assert.AreEqual(value, ds);
         }
         [Test]
