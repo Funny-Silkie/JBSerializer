@@ -20,7 +20,7 @@ namespace JBSerializer
         public static bool HasAttribute<TAttribute>(Type type) where TAttribute : Attribute
         {
             if (type == null) throw new ArgumentNullException(nameof(type), "引数がnullです");
-            return type.GetCustomAttribute<TAttribute>() != null;
+            return type.GetCustomAttribute<TAttribute>(true) != null;
         }
         public static bool HasAttribute<TAttribute>(MethodInfo method) where TAttribute : Attribute
         {
