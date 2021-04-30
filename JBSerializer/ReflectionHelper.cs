@@ -55,8 +55,8 @@ namespace JBSerializer
         public static object InvokeInstanceMethod(object value, string methodName, params (object obj, Type type)[] args)
         {
             if (value == null) throw new ArgumentNullException(nameof(value), "引数がnullです");
-            var paramTypes = args.ConvertAll(x => x.type);
-            return GetInstanceMethod(value.GetType(), methodName, paramTypes).Invoke(value, args.ConvertAll(x => x.obj));
+            var paramTypes = Array.ConvertAll(args, x => x.type);
+            return GetInstanceMethod(value.GetType(), methodName, paramTypes).Invoke(value, Array.ConvertAll(args, x => x.obj));
         }
     }
 }
