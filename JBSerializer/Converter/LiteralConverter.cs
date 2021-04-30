@@ -30,40 +30,8 @@ namespace JBSerializer
         {
             if (value is JsonElement element)
             {
-                if (element.ValueKind == JsonValueKind.Null) return null;
-                if (element.ValueKind == JsonValueKind.Array)
-                {
-                    // ToDo: JsonSerializerの都合で1次元配列までだが，2次元配列以降に拡張した際にここも対応
-                    var genericType = type.GetGenericArguments()[0];
-                    var e = element.EnumerateArray();
-                    var array = Array.CreateInstance(genericType, element.GetArrayLength());
-                    var index = 0;
-                    var converter = provider.GetConverter(genericType) ?? throw new SerializationException("コンバータを取得出来ませんでした");
-                    while (e.MoveNext())
-                    {
-                        array.SetValue(converter.ConvertBack(e.Current, provider), index++);
-                    }
-                    return array;
-                }
-                switch (type)
-                {
-                    case Type t when t == typeof(sbyte): return element.GetSByte();
-                    case Type t when t == typeof(byte): return element.GetByte();
-                    case Type t when t == typeof(short): return element.GetInt16();
-                    case Type t when t == typeof(ushort): return element.GetUInt16();
-                    case Type t when t == typeof(int): return element.GetInt32();
-                    case Type t when t == typeof(uint): return element.GetUInt32();
-                    case Type t when t == typeof(long): return element.GetInt64();
-                    case Type t when t == typeof(ulong): return element.GetUInt64();
-                    case Type t when t == typeof(float): return element.GetSingle();
-                    case Type t when t == typeof(double): return element.GetDouble();
-                    case Type t when t == typeof(decimal): return element.GetDecimal();
-                    case Type t when t == typeof(char): return element.GetString()[0];
-                    case Type t when t == typeof(bool): return element.GetBoolean();
-                    case Type t when t == typeof(string): return element.GetString();
-                    case Type t when t == typeof(DateTime): return element.GetDateTime();
-                    case Type t when t == typeof(DateTimeOffset): return element.GetDateTimeOffset();
-                }
+                var parser = new JsonElementParser(type);
+                return parser.Parse(element);
             }
             return value;
         }
