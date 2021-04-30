@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Test
 {
@@ -8,7 +9,7 @@ namespace Test
     {
         private readonly int Private = 1;
         internal char Internal = '2';
-        protected int Protected { get; set; } = 3;
+        protected int[] Protected { get; set; } = new[] { 1, 2, 3, 4, 5 };
         public string Public = "4";
         [NonSerialized]
         public bool NonSerializedField = false;
@@ -17,7 +18,7 @@ namespace Test
             return other is not null &&
                    Private == other.Private &&
                    Internal == other.Internal &&
-                   Protected == other.Protected &&
+                   Enumerable.SequenceEqual(Protected, other.Protected) &&
                    NonSerializedField == other.NonSerializedField &&
                    Public == other.Public;
         }
