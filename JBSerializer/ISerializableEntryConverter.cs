@@ -54,8 +54,10 @@ namespace JBSerializer
             while (enumerator.MoveNext())
             {
                 var current = enumerator.Current;
-                var setValue = provider.GetConverter(current.ObjectType).Convert(current.Value, provider);
-                result.Fields.Add(current.Name, (current.ObjectType.FullName, setValue));
+                var converter = provider.GetConverter(current.ObjectType);
+                if (converter == null) throw new SerializationException("コンバータを取得できませんでした");
+                var setValue = converter.Convert(current.Value, provider);
+                result.Fields.Add(current.Name, (ReflectionHelper.GetTypeName(current.ObjectType), setValue));
             }
 
             return result;

@@ -26,6 +26,6 @@ namespace JBSerializer
             return Type.GetType(typeName);
         }
         /// <inheritdoc/>
-        public override Type GetConvertedType(Type from) => typeof(Type);
+        public override Type GetConvertedType(Type from) => typeof(string);
     }
 }

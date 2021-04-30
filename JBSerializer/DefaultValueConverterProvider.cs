@@ -18,12 +18,13 @@ namespace JBSerializer
         public override ValueConverter GetConverter(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type), "引数がnullです");
+            if (type.IsArray) return new LiteralConverter(type);
+            if (type == typeof(Type)) return new TypeConverter();
             if (!ReflectionHelper.HasAttribute<SerializableAttribute>(type)) return null;
             return type switch
             {
-                Type t when Array.IndexOf(LiteralTypes, t) >= 0 || t.IsArray => new LiteralConverter(),
+                Type t when Array.IndexOf(LiteralTypes, t) >= 0 => new LiteralConverter(type),
                 Type t when ReflectionHelper.IsInherited<ISerializable>(t) => new ISerializableEntryConverter(),
-                Type t when t == typeof(Type) => new TypeConverter(),
                 _ => new DefaultEntryConverter(type)
             };
         }

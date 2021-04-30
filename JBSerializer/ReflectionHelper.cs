@@ -6,6 +6,11 @@ namespace JBSerializer
 {
     internal static class ReflectionHelper
     {
+        public static string GetTypeName(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type), "引数がnullです");
+            return $"{type.FullName}, {type.Assembly.FullName}";
+        }
         /// <summary>
         /// 指定した型の持っている<see cref="Attribute"/>を列挙する
         /// </summary>
@@ -67,7 +72,7 @@ namespace JBSerializer
         {
             if (type == null) throw new ArgumentNullException(nameof(type), "引数がnullです");
             var checkType = typeof(TParent);
-            if (type.IsInterface)
+            if (checkType.IsInterface)
             {
                 var interfaces = type.GetInterfaces();
                 for (int i = 0; i < interfaces.Length; i++)

@@ -14,17 +14,17 @@ namespace JBSerializer
         /// </summary>
         public static SerializeEntry Null => new() { IsNull = true };
         /// <summary>
-        /// 値がnullかどうかを取得する
+        /// 値がnullかどうかを取得または設定する
         /// </summary>
-        public bool IsNull { get; internal set; }
+        public bool IsNull { get; set; }
         /// <summary>
-        /// 型名を取得する
+        /// 型名を取得または設定する
         /// </summary>
-        public string TypeName { get; internal set; }
+        public string TypeName { get; set; }
         /// <summary>
         /// フィールドを取得する
         /// </summary>
-        public Dictionary<string, (string typeName, object value)> Fields { get; set; }
+        public Dictionary<string, TypeValueEntry> Fields { get; set; }
         /// <summary>
         /// <see cref="SerializeEntry"/>の新しいインスタンスを生成する
         /// </summary>
@@ -36,8 +36,7 @@ namespace JBSerializer
         /// <exception cref="ArgumentNullException"><paramref name="type"/>がnull</exception>
         public SerializeEntry(Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type), "引数がnullです");
-            TypeName = type.FullName;
+            TypeName = ReflectionHelper.GetTypeName(type);
             IsNull = false;
             Fields = new();
         }

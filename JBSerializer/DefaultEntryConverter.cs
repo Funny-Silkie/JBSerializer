@@ -26,7 +26,7 @@ namespace JBSerializer
             if (entry.IsNull) return null;
 
             var type = Type.GetType(entry.TypeName);
-            var result = ReflectionHelper.GetEmptyConstructor(type);
+            var result = ReflectionHelper.GetEmptyConstructor(type).Invoke(Array.Empty<object>());
             var methods = ReflectionHelper.GetInstanceMethods(type);
 
             // OnDeserializing実装メソッドを実行
@@ -43,7 +43,8 @@ namespace JBSerializer
             {
                 var fieldInfo = ReflectionHelper.GetInstanceField(type, fieldName);
                 if (fieldInfo == null) throw new SerializationException("フィールドの復元に失敗しました");
-                var setValue = provider.GetConverter(Type.GetType(typeName)).ConvertBack(value, provider);
+                var converter = provider.GetConverter(Type.GetType(typeName)) ?? throw new SerializationException("コンバータの取得に失敗しました");
+                var setValue = converter.ConvertBack(value, provider);
                 fieldInfo.SetValue(result, setValue);
             }
 
@@ -85,8 +86,10 @@ namespace JBSerializer
             var fields = ReflectionHelper.GetInstanceFields(type);
             for (int i = 0; i < fields.Length; i++)
             {
-                var savedValue = provider.GetConverter(fields[i].FieldType).Convert(fields[i].GetValue(value), provider);
-                result.Fields.Add(fields[i].Name, (fields[i].FieldType.FullName, savedValue));
+                if (ReflectionHelper.HasAttribute<NonSerializedAttribute>(fields[i])) continue;
+                var converter = provider.GetConverter(fields[i].FieldType);
+                var savedValue = converter.Convert(fields[i].GetValue(value), provider);
+                result.Fields.Add(fields[i].Name, (ReflectionHelper.GetTypeName(fields[i].FieldType), savedValue));
             }
 
             // OnSerialized実装メソッドを実行
