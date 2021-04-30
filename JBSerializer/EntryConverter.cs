@@ -39,5 +39,7 @@ namespace JBSerializer
         /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public sealed override object Convert(object value, ValueConverterProvider provider) => ToSerializeEntry(value, provider);
+        /// <inheritdoc/>
+        public override Type GetConvertedType(Type from) => typeof(SerializeEntry);
     }
 }

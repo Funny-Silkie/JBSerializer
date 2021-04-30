@@ -39,5 +39,12 @@ namespace JBSerializer
         /// <exception cref="ArgumentNullException"><paramref name="provider"/>がnull</exception>
         /// <returns>元のオブジェクト</returns>
         public abstract object ConvertBack(object value, ValueConverterProvider provider);
+        /// <summary>
+        /// 変換後の型を取得する
+        /// </summary>
+        /// <param name="from">変換する要素の型</param>
+        /// <exception cref="ArgumentNullException"><paramref name="from"/>がnull</exception>
+        /// <returns><paramref name="from"/>から返還されたときに生成される要素の型</returns>
+        public abstract Type GetConvertedType(Type from);
     }
 }

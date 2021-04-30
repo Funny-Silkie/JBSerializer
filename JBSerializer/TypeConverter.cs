@@ -25,5 +25,7 @@ namespace JBSerializer
             if (value is not string typeName) throw new SerializationException("文字列に変換できませんでした");
             return Type.GetType(typeName);
         }
+        /// <inheritdoc/>
+        public override Type GetConvertedType(Type from) => typeof(Type);
     }
 }

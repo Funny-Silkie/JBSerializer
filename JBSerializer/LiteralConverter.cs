@@ -15,5 +15,7 @@ namespace JBSerializer
         public override object Convert(object value, ValueConverterProvider provider) => value;
         /// <inheritdoc/>
         public override object ConvertBack(object value, ValueConverterProvider provider) => value;
+        /// <inheritdoc/>
+        public override Type GetConvertedType(Type from) => from ?? throw new ArgumentNullException(nameof(from), "引数がnullです");
     }
 }
