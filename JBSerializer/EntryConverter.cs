@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace JBSerializer
@@ -36,7 +35,7 @@ namespace JBSerializer
         /// <param name="provider"><see cref="ValueConverter"/>を与えるプロバイダ</param>
         /// <exception cref="ArgumentNullException"><paramref name="provider"/>がnull</exception>
         /// <returns><paramref name="value"/>の情報を格納する<see cref="SerializeEntry"/></returns>
-        protected abstract Dictionary<string, object> ToSerializeEntry(object value, ValueConverterProvider provider);
+        protected abstract SerializeEntry ToSerializeEntry(object value, ValueConverterProvider provider);
         /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public sealed override object Convert(object value, ValueConverterProvider provider) => ToSerializeEntry(value, provider);
