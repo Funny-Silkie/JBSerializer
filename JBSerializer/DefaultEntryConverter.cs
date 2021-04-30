@@ -21,11 +21,12 @@ namespace JBSerializer
         /// <inheritdoc/>
         protected override object FromSerializeEntry(SerializeEntry entry, ValueConverterProvider provider)
         {
+            if (provider == null) throw new ArgumentNullException(nameof(provider), "引数がnullです");
             if (entry == null) throw new ArgumentNullException(nameof(entry), "引数がnullです");
             if (entry.IsNull) return null;
 
             var type = Type.GetType(entry.TypeName);
-            var instance = ReflectionHelper.GetEmptyConstructor(type);
+            var result = ReflectionHelper.GetEmptyConstructor(type);
             var methods = ReflectionHelper.GetInstanceMethods(type);
 
             // OnDeserializing実装メソッドを実行
@@ -34,7 +35,7 @@ namespace JBSerializer
                 if (!ReflectionHelper.HasAttribute<OnDeserializingAttribute>(methods[i])) continue;
                 var parameters = methods[i].GetParameters();
                 if (parameters.Length != 1 || parameters[0].ParameterType != typeof(StreamingContext)) continue;
-                methods[i].Invoke(instance, new object[] { streamingContext });
+                methods[i].Invoke(result, new object[] { streamingContext });
             }
 
             // フィールドの復元
@@ -43,7 +44,7 @@ namespace JBSerializer
                 var fieldInfo = ReflectionHelper.GetInstanceField(type, fieldName);
                 if (fieldInfo == null) throw new SerializationException("フィールドの復元に失敗しました");
                 var setValue = provider.GetConverter(fieldInfo.FieldType).ConvertBack(value, provider);
-                fieldInfo.SetValue(instance, setValue);
+                fieldInfo.SetValue(result, setValue);
             }
 
             // OnDeserialized実装メソッドを実行
@@ -52,13 +53,13 @@ namespace JBSerializer
                 if (!ReflectionHelper.HasAttribute<OnDeserializedAttribute>(methods[i])) continue;
                 var parameters = methods[i].GetParameters();
                 if (parameters.Length != 1 || parameters[0].ParameterType != typeof(StreamingContext)) continue;
-                methods[i].Invoke(instance, new object[] { streamingContext });
+                methods[i].Invoke(result, new object[] { streamingContext });
             }
 
             // IDeserializationCallback.OnDeserialitionを実行
-            if (instance is IDeserializationCallback id) id.OnDeserialization(null);
+            if (result is IDeserializationCallback id) id.OnDeserialization(null);
 
-            return instance;
+            return result;
         }
         /// <inheritdoc/>
         protected override SerializeEntry ToSerializeEntry(object value, ValueConverterProvider provider)

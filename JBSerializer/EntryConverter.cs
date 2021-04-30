@@ -16,11 +16,11 @@ namespace JBSerializer
         /// <summary>
         /// <see cref="SerializeEntry"/>からオブジェクトを復元する
         /// </summary>
-        /// <param name="dictionary">使用する<see cref="SerializeEntry"/></param>
+        /// <param name="entry">使用する<see cref="SerializeEntry"/></param>
         /// <param name="provider"><see cref="ValueConverter"/>を与えるプロバイダ</param>
-        /// <exception cref="ArgumentNullException"><paramref name="dictionary"/>または<paramref name="provider"/>がnull</exception>
-        /// <returns><paramref name="dictionary"/>をもとに復元された値</returns>
-        protected abstract object FromSerializeEntry(SerializeEntry dictionary, ValueConverterProvider provider);
+        /// <exception cref="ArgumentNullException"><paramref name="entry"/>または<paramref name="provider"/>がnull</exception>
+        /// <returns><paramref name="entry"/>をもとに復元された値</returns>
+        protected abstract object FromSerializeEntry(SerializeEntry entry, ValueConverterProvider provider);
         /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public sealed override object ConvertBack(object value, ValueConverterProvider provider)
