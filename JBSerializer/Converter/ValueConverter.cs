@@ -27,18 +27,18 @@ namespace JBSerializer
         /// JSON出力するオブジェクトに変換する
         /// </summary>
         /// <param name="value">変換する値</param>
-        /// <param name="provider"><see cref="ValueConverter"/>を与えるプロバイダ</param>
-        /// <exception cref="ArgumentNullException"><paramref name="provider"/>がnull</exception>
+        /// <param name="serializer">使用するシリアライザ</param>
+        /// <exception cref="ArgumentNullException"><paramref name="serializer"/>がnull</exception>
         /// <returns>JSON出力するオブジェクト</returns>
-        public abstract object Convert(object value, ValueConverterProvider provider);
+        public abstract object Convert(object value, BinaricJsonSerializer serializer);
         /// <summary>
         /// JSON出力するオブジェクトから元のオブジェクトに復元する
         /// </summary>
         /// <param name="value">変換する値</param>
-        /// <param name="provider"><see cref="ValueConverter"/>を与えるプロバイダ</param>
-        /// <exception cref="ArgumentNullException"><paramref name="provider"/>がnull</exception>
+        /// <param name="serializer">使用するシリアライザ</param>
+        /// <exception cref="ArgumentNullException"><paramref name="serializer"/>がnull</exception>
         /// <returns>元のオブジェクト</returns>
-        public abstract object ConvertBack(object value, ValueConverterProvider provider);
+        public abstract object ConvertBack(object value, BinaricJsonSerializer serializer);
         /// <summary>
         /// 変換後の型を取得する
         /// </summary>

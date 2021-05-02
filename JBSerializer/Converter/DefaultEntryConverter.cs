@@ -10,18 +10,11 @@ namespace JBSerializer
     internal sealed class DefaultEntryConverter : EntryConverter
     {
         private readonly static StreamingContext streamingContext = new(StreamingContextStates.All);
-        /// <summary>
-        /// 変換する要素の型を取得する
-        /// </summary>
-        public Type Type { get; }
-        internal DefaultEntryConverter(Type type)
-        {
-            Type = type ?? throw new ArgumentNullException(nameof(type), "引数がnullです");
-        }
+        internal DefaultEntryConverter(Type type) : base(type) { }
         /// <inheritdoc/>
-        protected override object FromSerializeEntry(SerializeEntry entry, ValueConverterProvider provider)
+        protected override object FromSerializeEntry(SerializeEntry entry, BinaricJsonSerializer serializer)
         {
-            if (provider == null) throw new ArgumentNullException(nameof(provider), "引数がnullです");
+            if (serializer == null) throw new ArgumentNullException(nameof(serializer), "引数がnullです");
             if (entry == null) throw new ArgumentNullException(nameof(entry), "引数がnullです");
             if (entry.IsNull) return null;
 
@@ -43,8 +36,8 @@ namespace JBSerializer
             {
                 var fieldInfo = ReflectionHelper.GetInstanceField(type, fieldName);
                 if (fieldInfo == null) throw new SerializationException("フィールドの復元に失敗しました");
-                var converter = provider.GetConverter(Type.GetType(typeName)) ?? throw new SerializationException("コンバータの取得に失敗しました");
-                var setValue = converter.ConvertBack(value, provider);
+                var converter = serializer.GetConverter(Type.GetType(typeName)) ?? throw new SerializationException("コンバータの取得に失敗しました");
+                var setValue = converter.ConvertBack(value, serializer);
                 fieldInfo.SetValue(result, setValue);
             }
 
@@ -63,9 +56,9 @@ namespace JBSerializer
             return result;
         }
         /// <inheritdoc/>
-        protected override SerializeEntry ToSerializeEntry(object value, ValueConverterProvider provider)
+        protected override SerializeEntry ToSerializeEntry(object value, BinaricJsonSerializer serializer)
         {
-            if (provider == null) throw new ArgumentNullException(nameof(provider), "引数がnullです");
+            if (serializer == null) throw new ArgumentNullException(nameof(serializer), "引数がnullです");
             if (value == null) return SerializeEntry.Null;
 
             var type = value.GetType();
@@ -87,8 +80,8 @@ namespace JBSerializer
             for (int i = 0; i < fields.Length; i++)
             {
                 if (ReflectionHelper.HasAttribute<NonSerializedAttribute>(fields[i])) continue;
-                var converter = provider.GetConverter(fields[i].FieldType);
-                var savedValue = converter.Convert(fields[i].GetValue(value), provider);
+                var converter = serializer.GetConverter(fields[i].FieldType);
+                var savedValue = converter.Convert(fields[i].GetValue(value), serializer);
                 result.Fields.Add(fields[i].Name, (ReflectionHelper.GetTypeName(fields[i].FieldType), savedValue));
             }
 

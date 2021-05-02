@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Text.Json;
 
 namespace JBSerializer
@@ -24,14 +23,14 @@ namespace JBSerializer
             this.type = type ?? throw new ArgumentNullException(nameof(type), "引数がnullです");
         }
         /// <inheritdoc/>
-        public override object Convert(object value, ValueConverterProvider provider) => value;
+        public override object Convert(object value, BinaricJsonSerializer serializer) => value;
         /// <inheritdoc/>
-        public override object ConvertBack(object value, ValueConverterProvider provider)
+        public override object ConvertBack(object value, BinaricJsonSerializer serializer)
         {
             if (value is JsonElement element)
             {
                 var parser = new JsonElementParser(type);
-                return parser.Parse(element);
+                return parser.Parse(element, serializer);
             }
             return value;
         }

@@ -26,7 +26,7 @@ namespace JBSerializer
             {
                 Type t when ReflectionHelper.IsInherited<ITuple>(t) => new TupleConverter(type),
                 Type t when Array.IndexOf(LiteralTypes, t) >= 0 => new LiteralConverter(type),
-                Type t when ReflectionHelper.IsInherited<ISerializable>(t) => new ISerializableEntryConverter(),
+                Type t when ReflectionHelper.IsInherited<ISerializable>(t) => new ISerializableEntryConverter(type),
                 _ => new DefaultEntryConverter(type)
             };
         }

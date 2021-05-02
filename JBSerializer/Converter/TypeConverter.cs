@@ -11,16 +11,16 @@ namespace JBSerializer
         /// <inheritdoc/>
         public override bool CanConvert(Type type) => type == typeof(Type);
         /// <inheritdoc/>
-        public override object Convert(object value, ValueConverterProvider provider)
+        public override object Convert(object value, BinaricJsonSerializer serializer)
         {
-            if (provider == null) throw new ArgumentNullException(nameof(provider), "引数がnullです");
+            if (serializer == null) throw new ArgumentNullException(nameof(serializer), "引数がnullです");
             if (value == null) return null;
             return ((Type)value).FullName;
         }
         /// <inheritdoc/>
-        public override object ConvertBack(object value, ValueConverterProvider provider)
+        public override object ConvertBack(object value, BinaricJsonSerializer serializer)
         {
-            if (provider == null) throw new ArgumentNullException(nameof(provider), "引数がnullです");
+            if (serializer == null) throw new ArgumentNullException(nameof(serializer), "引数がnullです");
             if (value == null) return null;
             if (value is not string typeName) throw new SerializationException("文字列に変換できませんでした");
             return Type.GetType(typeName);
