@@ -19,7 +19,7 @@ namespace JBSerializer
             if (entry.IsNull) return null;
 
             var type = Type.GetType(entry.TypeName);
-            var result = ReflectionHelper.GetEmptyConstructor(type).Invoke(Array.Empty<object>());
+            var result = FormatterServices.GetUninitializedObject(type);
             var methods = ReflectionHelper.GetInstanceMethods(type);
 
             // OnDeserializing実装メソッドを実行

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+using System;
 using System.Runtime.Serialization;
 
 namespace JBSerializer
@@ -24,7 +23,6 @@ namespace JBSerializer
             if (!ReflectionHelper.HasAttribute<SerializableAttribute>(type)) return null;
             return type switch
             {
-                Type t when ReflectionHelper.IsInherited<ITuple>(t) => new TupleConverter(type),
                 Type t when Array.IndexOf(LiteralTypes, t) >= 0 => new LiteralConverter(type),
                 Type t when ReflectionHelper.IsInherited<ISerializable>(t) => new ISerializableEntryConverter(type),
                 _ => new DefaultEntryConverter(type)

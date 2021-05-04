@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using JBSerializer;
 using System.Collections.Generic;
 using System.IO;
@@ -59,6 +59,20 @@ namespace Test
         {
             var value = new List<char>() { 'a', 'b', 'c' };
             var ds = Serialize(value, "list");
+            Assert.AreEqual(value, ds);
+        }
+        [Test]
+        public void SerializeTestNullable ()
+        {
+            int? value = 3;
+            var ds = Serialize(value, "nullable");
+            Assert.AreEqual(value, ds);
+        }
+        [Test]
+        public void SerializeStruct()
+        {
+            var value = new Struct(3);
+            var ds = Serialize(value, "struct");
             Assert.AreEqual(value, ds);
         }
         [Test]
