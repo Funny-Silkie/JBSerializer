@@ -39,7 +39,11 @@ namespace JBSerializer
             foreach (var (fieldName, (typeName, value)) in entry.Fields)
             {
                 var fieldInfo = ReflectionHelper.GetInstanceField(type, fieldName);
-                if (fieldInfo == null) throw new SerializationException("フィールドの復元に失敗しました");
+                if (fieldInfo == null)
+                {
+                    if (serializer.IgnoreNotFoundMember) continue;
+                    throw new SerializationException("フィールドの復元に失敗しました");
+                }
                 var converter = serializer.GetConverter(Type.GetType(typeName)) ?? throw new SerializationException("コンバータの取得に失敗しました");
                 var setValue = converter.ConvertBack(value, serializer);
                 fieldInfo.SetValue(result, setValue);

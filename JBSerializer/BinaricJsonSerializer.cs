@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Encodings.Web;
@@ -70,6 +70,10 @@ namespace JBSerializer
             get => options.PropertyNamingPolicy;
             set => options.PropertyNamingPolicy = value;
         }
+        /// <summary>
+        /// デシリアライズ時に見つからなかったメンバーの復元をスキップするかどうかを取得または設定する
+        /// </summary>
+        public bool IgnoreNotFoundMember { get; set; }
         /// <summary>
         /// インデント付きで出力するかどうかを取得または設定する
         /// </summary>
