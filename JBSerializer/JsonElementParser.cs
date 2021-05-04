@@ -19,7 +19,13 @@ namespace JBSerializer
         {
             this.type = type ?? throw new ArgumentNullException(nameof(type), "引数がnullです");
         }
-        /// <iznheritdoc/>
+        /// <summary>
+        /// <see cref="JsonElement"/>を復元する
+        /// </summary>
+        /// <param name="element">復元する<see cref="JsonElement"/>のインスタンス</param>
+        /// <param name="serializer">使用するシリアライザ</param>
+        /// <exception cref="ArgumentNullException"><paramref name="serializer"/>がnull</exception>
+        /// <returns><paramref name="element"/>を復元したオブジェクト</returns>
         public object Parse(JsonElement element, BinaricJsonSerializer serializer)
         {
             if (serializer == null) throw new ArgumentNullException(nameof(serializer), "引数がnullです");

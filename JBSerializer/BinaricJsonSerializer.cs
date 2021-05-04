@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Encodings.Web;
@@ -87,6 +87,7 @@ namespace JBSerializer
         /// </summary>
         /// <typeparam name="T">シリアライズする要素の型</typeparam>
         /// <param name="value">シリアライズする要素</param>
+        /// <exception cref="SerializationException">シリアライズに失敗した</exception>
         /// <returns>シリアライズ結果のJSON</returns>
         public string Serialize<T>(T value) => Serialize(typeof(T), value);
         /// <summary>
@@ -95,6 +96,7 @@ namespace JBSerializer
         /// <param name="type">シリアライズする要素の型</param>
         /// <param name="value">シリアライズする要素</param>
         /// <exception cref="ArgumentNullException"><paramref name="type"/>がnull</exception>
+        /// <exception cref="SerializationException">シリアライズに失敗した</exception>
         /// <returns>シリアライズ結果のJSON</returns>
         public string Serialize(Type type, object value)
         {
@@ -111,6 +113,9 @@ namespace JBSerializer
         /// </summary>
         /// <typeparam name="T">デシリアライズする要素の型</typeparam>
         /// <param name="json">デシリアライズするJSON</param>
+        /// <exception cref="ArgumentNullException"><paramref name="json"/>がnull</exception>
+        /// <exception cref="JsonException">Jsonの形式が無効</exception>
+        /// <exception cref="SerializationException">デシリアライズに失敗した</exception>
         /// <returns>デシリアライズされた値</returns>
         public T Deserialize<T>(string json) => (T)Deserialize(json, typeof(T));
         /// <summary>
@@ -118,7 +123,9 @@ namespace JBSerializer
         /// </summary>
         /// <param name="json">デシリアライズするJSON</param>
         /// <param name="type">デシリアライズする要素の型</param>
-        /// <exception cref="ArgumentNullException"><paramref name="type"/>がnull</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="json"/>または<paramref name="type"/>がnull</exception>
+        /// <exception cref="JsonException">Jsonの形式が無効</exception>
+        /// <exception cref="SerializationException">デシリアライズに失敗した</exception>
         /// <returns>デシリアライズされた値</returns>
         public object Deserialize(string json, Type type)
         {

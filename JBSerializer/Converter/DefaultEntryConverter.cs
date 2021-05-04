@@ -9,6 +9,11 @@ namespace JBSerializer
     [Serializable]
     internal class DefaultEntryConverter : EntryConverter
     {
+        /// <summary>
+        /// <see cref="DefaultEntryConverter"/>の新しいインスタンスを生成する
+        /// </summary>
+        /// <param name="type">復元する要素の型</param>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/>がnull</exception>
         internal DefaultEntryConverter(Type type) : base(type) { }
         /// <inheritdoc/>
         protected override object FromSerializeEntry(SerializeEntry entry, BinaricJsonSerializer serializer)

@@ -10,6 +10,9 @@ namespace JBSerializer
     [Serializable]
     internal abstract class EntryConverter : ValueConverter
     {
+        /// <summary>
+        /// 復元する要素の型を取得する
+        /// </summary>
         protected Type Type { get; }
         /// <summary>
         /// <see cref="EntryConverter"/>の新しいインスタンスを生成する

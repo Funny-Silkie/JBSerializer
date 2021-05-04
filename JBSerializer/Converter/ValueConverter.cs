@@ -9,6 +9,9 @@ namespace JBSerializer
     [Serializable]
     public abstract class ValueConverter
     {
+        /// <summary>
+        /// メソッド呼び出しに使用する<see cref="System.Runtime.Serialization.StreamingContext"/>のインスタンス
+        /// </summary>
         private protected static StreamingContext StreamingContext { get; } = new(StreamingContextStates.All);
         /// <summary>
         /// <see cref="ValueConverter"/>の新しいインスタンスを生成する
