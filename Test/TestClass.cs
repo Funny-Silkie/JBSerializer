@@ -34,6 +34,13 @@ namespace Test
             Assert.AreEqual(value, ds);
         }
         [Test]
+        public void SerializeTestEnum()
+        {
+            var value = TestEnum.Val2;
+            var ds = Serialize(value, "enum");
+            Assert.AreEqual(value, ds);
+        }
+        [Test]
         public void SerializeTestType()
         {
             var value = typeof(int);
