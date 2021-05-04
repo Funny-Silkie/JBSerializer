@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace JBSerializer
 {
@@ -8,6 +9,7 @@ namespace JBSerializer
     [Serializable]
     public abstract class ValueConverter
     {
+        private protected static StreamingContext StreamingContext { get; } = new(StreamingContextStates.All);
         /// <summary>
         /// <see cref="ValueConverter"/>の新しいインスタンスを生成する
         /// </summary>

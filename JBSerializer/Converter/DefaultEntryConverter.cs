@@ -7,9 +7,8 @@ namespace JBSerializer
     /// デフォルトの<see cref="EntryConverter"/>のクラス
     /// </summary>
     [Serializable]
-    internal sealed class DefaultEntryConverter : EntryConverter
+    internal class DefaultEntryConverter : EntryConverter
     {
-        private readonly static StreamingContext streamingContext = new(StreamingContextStates.All);
         internal DefaultEntryConverter(Type type) : base(type) { }
         /// <inheritdoc/>
         protected override object FromSerializeEntry(SerializeEntry entry, BinaricJsonSerializer serializer)
@@ -28,7 +27,7 @@ namespace JBSerializer
                 if (!ReflectionHelper.HasAttribute<OnDeserializingAttribute>(methods[i])) continue;
                 var parameters = methods[i].GetParameters();
                 if (parameters.Length != 1 || parameters[0].ParameterType != typeof(StreamingContext)) continue;
-                methods[i].Invoke(result, new object[] { streamingContext });
+                methods[i].Invoke(result, new object[] { StreamingContext });
             }
 
             // フィールドの復元
@@ -47,7 +46,7 @@ namespace JBSerializer
                 if (!ReflectionHelper.HasAttribute<OnDeserializedAttribute>(methods[i])) continue;
                 var parameters = methods[i].GetParameters();
                 if (parameters.Length != 1 || parameters[0].ParameterType != typeof(StreamingContext)) continue;
-                methods[i].Invoke(result, new object[] { streamingContext });
+                methods[i].Invoke(result, new object[] { StreamingContext });
             }
 
             // IDeserializationCallback.OnDeserialitionを実行
@@ -72,7 +71,7 @@ namespace JBSerializer
                 if (!ReflectionHelper.HasAttribute<OnSerializingAttribute>(methods[i])) continue;
                 var parameters = methods[i].GetParameters();
                 if (parameters.Length != 1 || parameters[0].ParameterType != typeof(StreamingContext)) continue;
-                methods[i].Invoke(value, new object[] { streamingContext });
+                methods[i].Invoke(value, new object[] { StreamingContext });
             }
 
             // フィールドの保存
@@ -91,7 +90,7 @@ namespace JBSerializer
                 if (!ReflectionHelper.HasAttribute<OnSerializedAttribute>(methods[i])) continue;
                 var parameters = methods[i].GetParameters();
                 if (parameters.Length != 1 || parameters[0].ParameterType != typeof(StreamingContext)) continue;
-                methods[i].Invoke(value, new object[] { streamingContext });
+                methods[i].Invoke(value, new object[] { StreamingContext });
             }
 
             return result;

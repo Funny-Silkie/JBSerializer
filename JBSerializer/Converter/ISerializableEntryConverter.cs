@@ -7,9 +7,8 @@ namespace JBSerializer
     /// <see cref="ISerializable"/>を実装した要素を変換する<see cref="EntryConverter"/>のクラス
     /// </summary>
     [Serializable]
-    internal sealed class ISerializableEntryConverter : EntryConverter
+    internal class ISerializableEntryConverter : EntryConverter
     {
-        private readonly static StreamingContext streamingContext = new(StreamingContextStates.All);
         /// <summary>
         /// <see cref="ISerializableEntryConverter"/>の新しいインスタンスを生成する
         /// </summary>
@@ -37,7 +36,7 @@ namespace JBSerializer
                 var infoValue = serializer.GetConverter(Type.GetType(typeName)).ConvertBack(value, serializer);
                 siInfo.AddValue(name, infoValue);
             }
-            var result = (ISerializable)ctor.Invoke(new object[] { siInfo, streamingContext });
+            var result = (ISerializable)ctor.Invoke(new object[] { siInfo, StreamingContext });
 
             // IDeserializationCallback.OnDeserialitionを実行
             if (result is IDeserializationCallback id) id.OnDeserialization(null);
@@ -53,7 +52,7 @@ namespace JBSerializer
             var ise = value as ISerializable ?? throw new SerializationException($"{nameof(ISerializable)}への変換に失敗しました");
             var siInfo = new SerializationInfo(type, new FormatterConverter());
 
-            ise.GetObjectData(siInfo, streamingContext);
+            ise.GetObjectData(siInfo, StreamingContext);
 
             var result = new SerializeEntry(type);
             var enumerator = siInfo.GetEnumerator();

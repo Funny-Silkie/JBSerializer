@@ -70,7 +70,7 @@ namespace JBSerializer
             {
                 WriteIndented = true,
             });
-            return provider.GetConverter(type).ConvertBack(obj, this);
+            return converter.ConvertBack(obj, this);
         }
         /// <summary>
         /// <see cref="ValueConverterProvider"/>を取得する

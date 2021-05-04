@@ -24,6 +24,16 @@ namespace JBSerializer
         {
             if (serializer == null) throw new ArgumentNullException(nameof(serializer), "引数がnullです");
             if (element.ValueKind == JsonValueKind.Null) return null;
+            if (element.ValueKind == JsonValueKind.Array)
+            {
+                var genericType = type.GetElementType();
+                var array = Array.CreateInstance(genericType, element.GetArrayLength());
+                var index = 0;
+                var e = element.EnumerateArray();
+                var parser = new JsonElementParser(genericType);
+                while (e.MoveNext()) array.SetValue(parser.Parse(e.Current, serializer), index++);
+                return array;
+            }
             return serializer.Deserialize(element.GetRawText(), type);
         }
     }
