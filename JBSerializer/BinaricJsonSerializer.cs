@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace JBSerializer
@@ -10,6 +11,15 @@ namespace JBSerializer
     /// </summary>
     public class BinaricJsonSerializer
     {
+        private readonly JsonSerializerOptions options = new() { WriteIndented = true };
+        /// <summary>
+        /// ケツカンマを許すかどうかを取得または設定する
+        /// </summary>
+        public bool AllowTrailingCommas
+        {
+            get => options.AllowTrailingCommas;
+            set => options.AllowTrailingCommas = value;
+        }
         /// <summary>
         /// <see cref="ValueConverter"/>を与えるプロバイダを取得または設定する
         /// </summary>
@@ -18,6 +28,60 @@ namespace JBSerializer
         /// 使用する<see cref="ValueConverter"/>を取得または設定する
         /// </summary>
         public IList<ValueConverter> Converters { get; set; } = new List<ValueConverter>();
+        /// <summary>
+        /// デフォルトのバッファーの大きさを取得または設定する
+        /// </summary>
+        /// <exception cref="ArgumentException">設定しようとした値が0以下</exception>
+        public int DefaultBufferSize
+        {
+            get => options.DefaultBufferSize;
+            set => options.DefaultBufferSize = value;
+        }
+        /// <summary>
+        /// エンコーダを取得または設定する
+        /// </summary>
+        public JavaScriptEncoder Encoder
+        {
+            get => options.Encoder;
+            set => options.Encoder = value;
+        }
+        /// <summary>
+        /// JSONのネストの深さを取得または設定する
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">設定しようとした値が0未満</exception>
+        public int MaxDepth
+        {
+            get => options.MaxDepth;
+            set => options.MaxDepth = value;
+        }
+        /// <summary>
+        /// プロパティ名をCase-Insensitiveにするかどうかを取得または設定する
+        /// </summary>
+        public bool PropertyNameCaseInsensitive
+        {
+            get => options.PropertyNameCaseInsensitive;
+            set => options.PropertyNameCaseInsensitive = value;
+        }
+        /// <summary>
+        /// プロパティの命名規約を取得または設定する
+        /// </summary>
+        public JsonNamingPolicy PropertyNamingPolicy
+        {
+            get => options.PropertyNamingPolicy;
+            set => options.PropertyNamingPolicy = value;
+        }
+        /// <summary>
+        /// インデント付きで出力するかどうかを取得または設定する
+        /// </summary>
+        public bool WriteIndented
+        {
+            get => options.WriteIndented;
+            set => options.WriteIndented = value;
+        }
+        /// <summary>
+        /// <see cref="BinaricJsonSerializer"/>の新しいインスタンスを生成する
+        /// </summary>
+        public BinaricJsonSerializer() { }
         /// <summary>
         /// シリアライズを行う
         /// </summary>
@@ -40,10 +104,7 @@ namespace JBSerializer
             if (converter == null) throw new SerializationException("シリアライズするコンバータが見つかりませんでした");
             var serializedValue = converter.Convert(value, this);
             var jsonType = serializedValue?.GetType() ?? typeof(object);
-            return JsonSerializer.Serialize(serializedValue, jsonType, new JsonSerializerOptions
-            {
-                WriteIndented = true,
-            });
+            return JsonSerializer.Serialize(serializedValue, jsonType, options);
         }
         /// <summary>
         /// デシリアライズを行う
@@ -66,10 +127,7 @@ namespace JBSerializer
             var converter = provider.GetConverter(type);
             if (converter == null) throw new SerializationException("シリアライズするコンバータが見つかりませんでした");
             var fixType = converter.GetConvertedType(type);
-            var obj = JsonSerializer.Deserialize(json, fixType, new JsonSerializerOptions
-            {
-                WriteIndented = true,
-            });
+            var obj = JsonSerializer.Deserialize(json, fixType, options);
             return converter.ConvertBack(obj, this);
         }
         /// <summary>
